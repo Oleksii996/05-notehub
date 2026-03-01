@@ -1,27 +1,37 @@
-import type { Movie } from '../../types/movie';
-import css from './MovieGrid.module.css';
-interface MovieGridProps {
-  onSelect: (movie: Movie) => void;
-  movies: Movie[];
+import { createPortal } from "react-dom";
+import css from "./Modal.module.css";
+import React, { useEffect, type ReactNode } from "react";
+interface ModalProps {
+  children: ReactNode;
+  onClose: () => void;
 }
-export default function MovieGrid({ onSelect, movies }: MovieGridProps) {
-  const imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
-  return (
-    <ul className={css.grid}>
-      {movies.map(movie => (
-        <li key={movie.id}>
-          <div className={css.card}>
-            <img
-              className={css.image}
-              src={imageBaseUrl + movie.poster_path}
-              alt={movie.title}
-              loading="lazy"
-              onClick={() => onSelect(movie)}
-            />
-            <h2 className={css.title}>{movie.title}</h2>
-          </div>
-        </li>
-      ))}
-    </ul>
+
+export default function Modal({ children, onClose }: ModalProps) {
+  const handleBackDropclicked = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
+
+  return createPortal(
+    <div className={css.backdrop} role="dialog" aria-modal="true" onClick={handleBackDropclicked}>
+      <div className={css.modal}>{children}</div>
+    </div>,
+    document.body,
   );
 }
