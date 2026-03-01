@@ -1,5 +1,9 @@
-import css from './ErrorMessage.module.css';
+import toast from "react-hot-toast";
 
-export default function ErrorMessage() {
-  return <p className={css.text}>There was an error, please try again...</p>;
+export default function Error() {
+  return (
+    <>
+      <p>{toast.error("Sorry! Something went wrong")}</p>
+    </>
+  );
 }
