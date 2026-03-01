@@ -1,5 +1,5 @@
-import css from './Loader.module.css';
+import { TailSpin } from "react-loader-spinner";
 
 export default function Loader() {
-  return <p className={css.text}>Loading movies, please wait...</p>;
+  return <TailSpin visible={true} height="80" width="80" color="#ea2f5e" ariaLabel="tail-spin-loading" radius="1" />;
 }
